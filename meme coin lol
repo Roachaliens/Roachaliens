@@ -1,0 +1,109 @@
+pip install solcx
+from solcx import compile_standard
+
+# Solidity source code
+source_code = '''
+pragma solidity ^0.8.0;
+
+contract LolCoin {
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+    uint256 public totalSupply;
+    mapping(address => uint256) public balanceOf;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    constructor() {
+        name = "LolCoin";
+        symbol = "LOL";
+        decimals = 18;
+        totalSupply = 1000000 * (10 ** uint256(decimals)); // Total supply of 1,000,000 LOL coins
+        balanceOf[msg.sender] = totalSupply; // Assign all coins to the contract deployer
+        emit Transfer(address(0), msg.sender, totalSupply);
+    }
+
+    function transfer(address to, uint256 value) public returns (bool success) {
+        require(to != address(0), "Invalid address");
+        require(balanceOf[msg.sender] >= value, "Insufficient balance");
+
+        balanceOf[msg.sender] -= value;
+        balanceOf[to] += value;
+        emit Transfer(msg.sender, to, value);
+        return true;
+    }
+}
+'''
+
+# Compile the Solidity code
+compiled_sol = compile_standard({
+    "language": "Solidity",
+    "sources": {
+        "LolCoin.sol": {
+            "content": source_code
+        }
+    },
+    "settings": {
+        "outputSelection": {
+            "*": {
+                "*": ["abi", "evm.bytecode"]
+            }
+        }
+    }
+})
+
+# Extract the compiled bytecode and ABI
+contract_interface = compiled_sol["contracts"]["LolCoin.sol"]["LolCoin"]
+
+# Bytecode and ABI
+bytecode = contract_interface["evm"]["bytecode"]["object"]
+abi = contract_interface["abi"]
+
+print("Bytecode:", bytecode)
+print("ABI:", abi)
+pragma solidity ^0.8.0;
+
+contract BlockchainWallet {
+    mapping(address => uint256) public balanceOf;
+
+    function deposit() external payable {
+        balanceOf[msg.sender] += msg.value;
+    }
+
+    function withdraw(uint256 amount) external {
+        require(balanceOf[msg.sender] >= amount, "Insufficient balance");
+        payable(msg.sender).transfer(amount);
+        balanceOf[msg.sender] -= amount;
+    }
+}
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract MemeCoin {
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+    uint256 public totalSupply;
+    mapping(address => uint256) public balanceOf;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    constructor() {
+        name = "MemeCoin";
+        symbol = "MEME";
+        decimals = 18;
+        totalSupply = 1000000 * (10 ** uint256(decimals)); // Total supply of 1,000,000 MEME coins
+        balanceOf[msg.sender] = totalSupply; // Assign all coins to the contract deployer
+        emit Transfer(address(0), msg.sender, totalSupply);
+    }
+
+    function transfer(address to, uint256 value) public returns (bool success) {
+        require(to != address(0), "Invalid address");
+        require(balanceOf[msg.sender] >= value, "Insufficient balance");
+
+        balanceOf[msg.sender] -= value;
+        balanceOf[to] += value;
+        emit Transfer(msg.sender, to, value);
+        return true;
+    }
+}
