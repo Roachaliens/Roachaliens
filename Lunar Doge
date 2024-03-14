@@ -1,0 +1,161 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+interface IUniswapV2Router02 {
+    function addLiquidityETH(
+        address token,
+        uint amountTokenDesired,
+        uint amountTokenMin,
+        uint amountETHMin,
+        address to,
+        uint deadline
+    ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
+}
+
+contract LunarDogeCoin {
+    // Your LunarDogeCoin contract implementation
+
+    // Address of the Uniswap Router
+    address public uniswapRouter = YOUR_UNISWAP_ROUTER_ADDRESS;
+
+    // Function to add liquidity to Uniswap
+    function addLiquidityToUniswap(uint amountTokenDesired, uint amountTokenMin, uint amountETHMin, address to, uint deadline) external payable {
+        // Approve Uniswap Router to spend LunarDogeCoin tokens
+        approve(uniswapRouter, amountTokenDesired);
+
+        // Add liquidity to Uniswap using ETH
+        IUniswapV2Router02(uniswapRouter).addLiquidityETH{value: msg.value}(
+            address(this),
+            amountTokenDesired,
+            amountTokenMin,
+            amountETHMin,
+            to,
+            deadline
+        );
+    }
+
+    // Function to approve token transfer to Uniswap Router
+    function approve(address spender, uint amount) internal {
+        // Implement the ERC20 approve function here
+    }
+}
+project_folder/
+│
+├── contracts/
+│   ├── LunarDogeCoin.sol         (Combined Solidity contract)
+│   └── GasFeeSimulator.sol       (Gas fee simulation contract)
+│
+├── frontend/
+│   ├── index.html                 (HTML file)
+│   ├── styles.css                 (CSS file)
+│   └── script.js                  (JavaScript file)
+│
+└── deployment/                    (Deployment scripts, if any)
+LunarDogeCoin.sol// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+interface IUniswapV2Router02 {
+    function addLiquidityETH(
+        address token,
+        uint amountTokenDesired,
+        uint amountTokenMin,
+        uint amountETHMin,
+        address to,
+        uint deadline
+    ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
+}
+
+contract LunarDogeCoin {
+    // Your LunarDogeCoin contract implementation
+
+    // Address of the Uniswap Router
+    address public uniswapRouter = YOUR_UNISWAP_ROUTER_ADDRESS;
+
+    // Function to add liquidity to Uniswap
+    function addLiquidityToUniswap(uint amountTokenDesired, uint amountTokenMin, uint amountETHMin, address to, uint deadline) external payable {
+        // Approve Uniswap Router to spend LunarDogeCoin tokens
+        approve(uniswapRouter, amountTokenDesired);
+
+        // Add liquidity to Uniswap using ETH
+        IUniswapV2Router02(uniswapRouter).addLiquidityETH{value: msg.value}(
+            address(this),
+            amountTokenDesired,
+            amountTokenMin,
+            amountETHMin,
+            to,
+            deadline
+        );
+    }
+
+    // Function to approve token transfer to Uniswap Router
+    function approve(address spender, uint amount) internal {
+        // Implement the ERC20 approve function here
+    }
+}
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+interface IUniswapV2Router02 {
+    function addLiquidityETH(
+        address token,
+        uint amountTokenDesired,
+        uint amountTokenMin,
+        uint amountETHMin,
+        address to,
+        uint deadline
+    ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
+}
+
+contract LunarDogeCoin {
+    string public name = "LunarDogeCoin";
+    string public symbol = "LDC";
+    uint256 public totalSupply = 3000000 * 10**18; // 3 million coins with 18 decimal places
+    uint8 public decimals = 18;
+    uint256 public initialPrice = 25; // Starting price in cents (0.025 USD)
+
+    mapping(address => uint256) public balanceOf;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    constructor() {
+        balanceOf[msg.sender] = totalSupply;
+    }
+
+    function transfer(address _to, uint256 _value) external returns (bool success) {
+        require(balanceOf[msg.sender] >= _value, "Insufficient balance");
+        balanceOf[msg.sender] -= _value;
+        balanceOf[_to] += _value;
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
+
+    // Liquidity pool functions
+    address public uniswapRouter = YOUR_UNISWAP_ROUTER_ADDRESS;
+
+    function addLiquidityToUniswap(uint amountTokenDesired, uint amountTokenMin, uint amountETHMin, address to, uint deadline) external payable {
+        approve(uniswapRouter, amountTokenDesired);
+        IUniswapV2Router02(uniswapRouter).addLiquidityETH{value: msg.value}(
+            address(this),
+            amountTokenDesired,
+            amountTokenMin,
+            amountETHMin,
+            to,
+            deadline
+        );
+    }
+
+    function approve(address spender, uint amount) internal {
+        // Implement the ERC20 approve function here
+    }
+
+    // Gas fee simulation
+    uint256 public gasPrice = 5 * 10**9; // Gas price in Wei (5 Gwei)
+    
+    function setGasPrice(uint256 _gasPrice) external {
+        gasPrice = _gasPrice;
+    }
+    
+    function estimateTransactionCost(uint256 gasUsed) external view returns (uint256) {
+        return gasPrice * gasUsed;
+    }
+}
